@@ -2,6 +2,8 @@
 
 The main branching strategy we're using is https://trunkbaseddevelopment.com/ aka the "Cactus Model".
 
+A video walk through of this workflow is available here: https://drive.google.com/file/d/16qOcEkBrjQvYHRaXTBm9y_JRr9O3U7JY/view?usp=sharing
+
 ## Developer Workflow
 
 The developer workflow works as follows,
