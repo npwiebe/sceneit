@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +18,7 @@ public class PostgresDatabaseTest {
         DatabaseManager dbm = new PostgresDatabaseManager();
         ArrayList<Movie> movies;
         try {
-             movies = dbm.getMovies();
+            movies = dbm.getMovies();
         } catch (DatabaseAccessException e) {
             fail(String.format("Error accessing database: %s", e.getMessage()));
             return;
@@ -73,7 +72,7 @@ public class PostgresDatabaseTest {
         Airing airing = airings.iterator().next();
 
         Calendar cal = new GregorianCalendar();
-        cal.set(2021, 2,28,17,30);
+        cal.set(2021, 2, 28, 17, 30);
 
         assertEquals(airing.getAiringId(), 1);
         assertEquals(airing.getMovieId(), 1);
@@ -84,11 +83,11 @@ public class PostgresDatabaseTest {
         // Verify that the same function with the input signature of a Movie returns the same result
         try {
             Movie movie = new Movie(
-                1,
-                "The Avengers",
-                "When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!",
-                77,
-                "https://image.tmdb.org/t/p/original/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg"
+                    1,
+                    "The Avengers",
+                    "When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!",
+                    77,
+                    "https://image.tmdb.org/t/p/original/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg"
             );
 
             ArrayList<Airing> airings2 = dbm.getAirings(movie);
@@ -153,7 +152,7 @@ public class PostgresDatabaseTest {
         }
 
         Calendar cal = new GregorianCalendar();
-        cal.set(2021, 2,28,17,30);
+        cal.set(2021, 2, 28, 17, 30);
 
         assertEquals(airing.getAiringId(), 1);
         assertEquals(airing.getMovieId(), 1);

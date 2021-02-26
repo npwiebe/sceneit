@@ -20,12 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import comp3350.sceneit.R;
 import comp3350.sceneit.data.Airing;
@@ -44,17 +43,15 @@ public class OrderActivity extends AppCompatActivity {
     private DatabaseManager dbm;
     private ArrayList<Airing> airings = new ArrayList<>();
     private ArrayList<Movie> movies = new ArrayList<>();
-    private String selectedTheater, selectedMovieTitle,selectedMovieRating;
+    private String selectedTheater, selectedMovieTitle, selectedMovieRating;
     private String[] airingTimes = {};
 
     //UI XML linked Variables
     private ToggleButton[] airingButtons;
     private EditText eTCalender, eTNumOfTickets;
     private ImageView ivMovieImg;
-    private TextView tvPrice,tvMovieTitle, tvTheatre, tvDescription;
+    private TextView tvPrice, tvMovieTitle, tvTheatre, tvDescription;
     private Button orderButton;
-
-
 
 
     @SuppressLint("ResourceType")
@@ -129,9 +126,11 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 String str;
@@ -140,8 +139,8 @@ public class OrderActivity extends AppCompatActivity {
                 } catch (NumberFormatException e) {
                     numOfTickets = 0;
                 }
-                price = TicketLogic.totalOrderPrice(numOfTickets,selectedMovie);
-                tvPrice.setText("$" + TicketLogic.totalOrderPrice(numOfTickets,selectedMovie));
+                price = TicketLogic.totalOrderPrice(numOfTickets, selectedMovie);
+                tvPrice.setText("$" + TicketLogic.totalOrderPrice(numOfTickets, selectedMovie));
                 if (airingButtons != null)
                     checkOrderButtonConditions();
             }
@@ -149,7 +148,7 @@ public class OrderActivity extends AppCompatActivity {
         eTNumOfTickets.addTextChangedListener(textWatcher1);
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 openDialog();
             }
         });
@@ -158,6 +157,7 @@ public class OrderActivity extends AppCompatActivity {
     /**
      * calenderHandler handles the Calender widget. After a date has been set,. ie. onDateSet(),
      * this method calls to getAirings and intitialize airings buttons.
+     *
      * @param eText
      */
     protected void calenderHandler(EditText eText) {
@@ -178,12 +178,12 @@ public class OrderActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Date date = cldr.getTime();
                         eText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        TextView tv = (TextView)findViewById(R.id.textViewShowings);
+                        TextView tv = (TextView) findViewById(R.id.textViewShowings);
                         tv.setText("Showings for " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
 
                         try {
-                            airingTimes = getAirings(monthOfYear,dayOfMonth);
+                            airingTimes = getAirings(monthOfYear, dayOfMonth);
                         } catch (DatabaseAccessException throwables) {
                             throwables.printStackTrace();
                         }
@@ -199,13 +199,14 @@ public class OrderActivity extends AppCompatActivity {
     /**
      * This method initializes airings buttons based off string[] of airing times, these are toggle buttons and only one at a time can be "ON".
      * Airings buttons also have the ticket price located on them, so a call to logic layer is used (TicketLogic), to calc ticket price.
+     *
      * @param airingTimes
      */
     protected void initializeAiringsButtons(String[] airingTimes) {
         airingButtons = new ToggleButton[airingTimes.length];
 
         for (int i = 0; i < airingTimes.length; i++) {
-            airingButtons[i] = createCustomButton(airingTimes[i] + "\n$" + TicketLogic.calculateTicketPrice(selectedMovie),getResources().getDrawable(R.drawable.button_border_off));
+            airingButtons[i] = createCustomButton(airingTimes[i] + "\n$" + TicketLogic.calculateTicketPrice(selectedMovie), getResources().getDrawable(R.drawable.button_border_off));
             airingButtons[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -228,11 +229,12 @@ public class OrderActivity extends AppCompatActivity {
      * This method creates the custom button programmatically  with text and background.
      * Text is the text to be displayed on button,
      * drawable is drawable background
+     *
      * @param text
      * @param background
      * @return a buttom object with above characteristics.
      */
-    protected ToggleButton createCustomButton(String text, Drawable background){
+    protected ToggleButton createCustomButton(String text, Drawable background) {
         ToggleButton myButton = new ToggleButton(this);
         myButton.setTextColor(Color.parseColor("#1980FC"));
         myButton.setBackground(background);
@@ -248,27 +250,30 @@ public class OrderActivity extends AppCompatActivity {
 
     /**
      * Helper method to turn off all toggleButtons in a toggleButton array
+     *
      * @param myButtons
      */
-    protected void toggleOffButtons(ToggleButton[] myButtons){
+    protected void toggleOffButtons(ToggleButton[] myButtons) {
         for (int i = 0; i < myButtons.length; i++)
             myButtons[i].setChecked(false);
     }
 
     /**
      * Helper method to turn on all toggleButtons in a toggleButton array
+     *
      * @param myButtons
      */
-    protected void toggleOnButtons(ToggleButton[] myButtons){
+    protected void toggleOnButtons(ToggleButton[] myButtons) {
         for (int i = 0; i < myButtons.length; i++)
             myButtons[i].setChecked(true);
     }
 
     /**
      * Helper method to provide proper toggleButtonImage based on whether the toggle button is checked or not
+     *
      * @param buttonView
      */
-    protected void toggleButtonImage(CompoundButton buttonView){
+    protected void toggleButtonImage(CompoundButton buttonView) {
         if (buttonView.isChecked()) {
             buttonView.setTextColor(Color.WHITE);
             Drawable d = getResources().getDrawable(R.drawable.button_border_on);
@@ -286,12 +291,12 @@ public class OrderActivity extends AppCompatActivity {
      * This function checks whether the orderButton should be enabled or not
      * The conditions require that at least one airing/time has been selected \
      * and the number of tickets selected is > 0.
+     *
      * @return Returns whether orderButton enabled conditions are met
      */
-    protected boolean checkOrderButtonConditions(){
-        for (int i = 0; i < airingButtons.length; i++)
-        {
-            if (airingButtons[i].isChecked()){
+    protected boolean checkOrderButtonConditions() {
+        for (int i = 0; i < airingButtons.length; i++) {
+            if (airingButtons[i].isChecked()) {
                 if (numOfTickets > 0) {
                     orderButton.setEnabled(true);
                     orderButton.setClickable(true);
@@ -308,6 +313,7 @@ public class OrderActivity extends AppCompatActivity {
     /**
      * The method makes a call to the database to get airings on the selected month and day and
      * sets them into the airings[].
+     *
      * @param month
      * @param day
      * @return Because of current implementation of database, only dates are returned, so currently
@@ -322,35 +328,37 @@ public class OrderActivity extends AppCompatActivity {
     /**
      * Helper method to create dialog, when order button is selected.
      */
-    protected  void openDialog(){
+    protected void openDialog() {
         OrderTicketsDialog orderTicketsDialog = new OrderTicketsDialog(getOrderBundle());
-        orderTicketsDialog.show(getSupportFragmentManager(),"orderTicketDialog");
+        orderTicketsDialog.show(getSupportFragmentManager(), "orderTicketDialog");
     }
 
     /**
      * Helper method to bundle selections, non persistent data and pass to next activity.
+     *
      * @return bunlde with all selections made in this activity
      */
 
-    protected Bundle getOrderBundle(){
+    protected Bundle getOrderBundle() {
         Bundle bundle = new Bundle();
-        bundle.putString("movieTitle",tvMovieTitle.getText().toString());
-        bundle.putString("theatre",tvTheatre.getText().toString());
-        bundle.putInt("price",price);
+        bundle.putString("movieTitle", tvMovieTitle.getText().toString());
+        bundle.putString("theatre", tvTheatre.getText().toString());
+        bundle.putInt("price", price);
         bundle.putInt("ticketsNum", Integer.parseInt(eTNumOfTickets.getText().toString()));
 
-        return  bundle;
+        return bundle;
     }
 
     /**
      * Getter method that returns movie from movies list (from database manager).
      * Finds specific movie based off of title.
+     *
      * @param title
      * @return
      */
-    protected Movie getSelectedMovie(String title){
+    protected Movie getSelectedMovie(String title) {
         for (int i = 0; i < movies.size(); i++) {
-            if (movies !=null && movies.get(i).getTitle().equals(title)) {
+            if (movies != null && movies.get(i).getTitle().equals(title)) {
                 return movies.get(i);
             }
         }

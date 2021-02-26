@@ -11,27 +11,28 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class OrderTicketsDialog extends AppCompatDialogFragment {
 
     private Bundle orderInfoBundle;
+    private int selectedRadioButton = 1; //default selection
 
-    public OrderTicketsDialog(Bundle orderInfoBundle){
+    public OrderTicketsDialog(Bundle orderInfoBundle) {
         super();
         this.orderInfoBundle = orderInfoBundle;
 
     }
-    private int selectedRadioButton = 1; //default selection
+
     @Override
     /**
      * On dialog box creation, should show a dialog box with 2 payment options (credit and paypal).
      * Keeps track of selected option and passes bundle to either payment or credit activity based
      * on choice.
      */
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String[] items = {"PayPal", "Credit Card"};
         int checkedItem = 1;
         builder.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case 0:
                         selectedRadioButton = 0;
                         break;
@@ -48,8 +49,7 @@ public class OrderTicketsDialog extends AppCompatDialogFragment {
                     Intent intent = new Intent(getContext(), PayPalPayment.class);
                     intent.putExtras(orderInfoBundle);
                     startActivity(intent);
-                }
-                else if (selectedRadioButton == 1) {
+                } else if (selectedRadioButton == 1) {
                     Intent intent = new Intent(getContext(), CreditActivity.class);
                     intent.putExtras(orderInfoBundle);
                     startActivity(intent);

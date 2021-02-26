@@ -6,11 +6,13 @@ import java.util.Calendar;
 
 import comp3350.sceneit.logic.CreditManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CreditManagerTest {
     @Test
-    public void testReverse(){
+    public void testReverse() {
         assertEquals(CreditManager.reverseNumber(1962), 2691);
         assertEquals(CreditManager.reverseNumber(162), 261);
         assertEquals(CreditManager.reverseNumber(12), 21);
@@ -18,7 +20,7 @@ public class CreditManagerTest {
     }
 
     @Test
-    public void testCheckDate(){
+    public void testCheckDate() {
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
         int year = c.get(Calendar.YEAR);
@@ -26,17 +28,17 @@ public class CreditManagerTest {
         assertFalse(CreditManager.checkDate(""));//No date
         assertFalse(CreditManager.checkDate("1"));//not enough info
         assertFalse(CreditManager.checkDate("11111"));//to much info
-        assertTrue(CreditManager.checkDate("0" + month + year%100));
-        assertTrue(CreditManager.checkDate("0" + month + (year%100+1)));
-        assertTrue(CreditManager.checkDate("0" + (month+1) + (year%100)));
-        assertTrue(CreditManager.checkDate("0" + (month+1) + (year%100+1)));
-        assertFalse(CreditManager.checkDate("0" + (month-1) + (year%100)));
-        assertFalse(CreditManager.checkDate("0" + (month) + (year%100-1)));
-        assertFalse(CreditManager.checkDate("0" + (month-1) + (year%100-1)));
+        assertTrue(CreditManager.checkDate("0" + month + year % 100));
+        assertTrue(CreditManager.checkDate("0" + month + (year % 100 + 1)));
+        assertTrue(CreditManager.checkDate("0" + (month + 1) + (year % 100)));
+        assertTrue(CreditManager.checkDate("0" + (month + 1) + (year % 100 + 1)));
+        assertFalse(CreditManager.checkDate("0" + (month - 1) + (year % 100)));
+        assertFalse(CreditManager.checkDate("0" + (month) + (year % 100 - 1)));
+        assertFalse(CreditManager.checkDate("0" + (month - 1) + (year % 100 - 1)));
     }
 
     @Test
-    public void testIsNumeric(){
+    public void testIsNumeric() {
         assertTrue(CreditManager.isNumeric("12"));
         assertFalse(CreditManager.isNumeric(""));
         assertFalse(CreditManager.isNumeric("F"));
@@ -45,7 +47,7 @@ public class CreditManagerTest {
     }
 
     @Test
-    public void testValidateCredit(){
+    public void testValidateCredit() {
         assertFalse(CreditManager.validateCredit(""));
         assertFalse(CreditManager.validateCredit("111122223333444"));//15 numbers
         assertFalse(CreditManager.validateCredit("11112222333344445"));//17 numbers
@@ -59,7 +61,7 @@ public class CreditManagerTest {
     }
 
     @Test
-    public void testFieldFilled(){
+    public void testFieldFilled() {
         assertTrue(CreditManager.fieldFilled("Yo lots of text"));
         assertTrue(CreditManager.fieldFilled("D"));
         assertFalse(CreditManager.fieldFilled(""));

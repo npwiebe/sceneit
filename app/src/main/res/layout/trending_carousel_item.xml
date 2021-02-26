@@ -50,6 +50,6 @@
         android:isIndicator="true"
         android:numStars="5"
         android:rating="4"
-        android:theme="@style/RatingBar"/>
+        android:theme="@style/RatingBar" />
 
 </LinearLayout>

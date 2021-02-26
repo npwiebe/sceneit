@@ -10,17 +10,19 @@ import java.util.ArrayList;
 public interface DatabaseManager {
 
     //<editor-fold desc="List Access Methods">
+
     /**
      * Get the list of movies in the DB
      *
-     * @see Movie
      * @return The list af movies in the DB
      * @throws DatabaseAccessException in the case the database fails to be accessed.
+     * @see Movie
      */
     ArrayList<Movie> getMovies() throws DatabaseAccessException;
 
     /**
      * Get the list of theatres in the DB.
+     *
      * @return the list of theatres in the DB
      * @throws DatabaseAccessException in the case the database fails to be accessed.
      * @see Theatre
@@ -29,6 +31,7 @@ public interface DatabaseManager {
 
     /**
      * Get the list of airings for a given movie.
+     *
      * @param movie_id The ID of the movie whose airings we want.
      * @return The list of airings for a given movie
      * @throws DatabaseAccessException in the case the database fails to be accessed.
@@ -51,13 +54,14 @@ public interface DatabaseManager {
 
 
     //<editor-fold desc="Single Access Methods">
+
     /**
      * Retrieves a movie based on its ID.
      *
      * @param movie_id The ID of the movie to retrieve.
      * @return The movie with the given the ID.
      * @throws DatabaseAccessException in the case the database fails to be accessed.
-     * @throws MovieNotFoundException if the movie is not found in the DB.
+     * @throws MovieNotFoundException  if the movie is not found in the DB.
      * @see Movie
      */
     Movie getMovie(int movie_id) throws DatabaseAccessException, MovieNotFoundException;
@@ -65,7 +69,7 @@ public interface DatabaseManager {
     /**
      * @param theatre_id The ID of the theatre to retrieve.
      * @return The theatre with the given ID.
-     * @throws DatabaseAccessException in the case the database fails to be accessed.
+     * @throws DatabaseAccessException  in the case the database fails to be accessed.
      * @throws TheatreNotFoundException in the case the theatre is not found in the DB.
      * @see Theatre
      */
