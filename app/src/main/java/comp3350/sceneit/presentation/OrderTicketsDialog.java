@@ -17,7 +17,7 @@ public class OrderTicketsDialog extends AppCompatDialogFragment {
         this.orderInfoBundle = orderInfoBundle;
 
     }
-    private int selectedRadioButton;
+    private int selectedRadioButton = 1; //default selection
     @Override
     /**
      * On dialog box creation, should show a dialog box with 2 payment options (credit and paypal).
@@ -45,13 +45,14 @@ public class OrderTicketsDialog extends AppCompatDialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 if (selectedRadioButton == 0) {
-                    Intent intent = new Intent(getContext(), MainActivity.class);// TODO: add paypal, credit card
+                    Intent intent = new Intent(getContext(), PayPalPayment.class);
                     intent.putExtras(orderInfoBundle);
                     startActivity(intent);
                 }
                 else if (selectedRadioButton == 1) {
-                    Intent intent = new Intent(getContext(), MainActivity.class);// TODO: add paypal, credit card
+                    Intent intent = new Intent(getContext(), CreditActivity.class);
                     intent.putExtras(orderInfoBundle);
+                    startActivity(intent);
                 }
             }
         });

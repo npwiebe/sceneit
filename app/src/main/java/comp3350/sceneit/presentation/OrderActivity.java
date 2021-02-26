@@ -94,7 +94,7 @@ public class OrderActivity extends AppCompatActivity {
         // Try to access database and grab selected movie, based on title.
         try {
             movies = dbm.getMovies();
-            selectedMovie = getSelectedMovie("selectedMovieTitle");
+            selectedMovie = getSelectedMovie(selectedMovieTitle);
 
         } catch (DatabaseAccessException e) {
             e.printStackTrace();
@@ -107,7 +107,7 @@ public class OrderActivity extends AppCompatActivity {
         ivMovieImg.setImageDrawable(moviePosterDrawable);
         tvMovieTitle.setText(selectedMovie.getTitle());
         tvDescription.setText(selectedMovie.getDescription());
-        tvTheatre.setText("TEST CHANGE TO BUNDLE WHEN POSSIBLE");//TODO DELETE THIS
+        //tvTheatre.setText("TEST CHANGE TO BUNDLE WHEN POSSIBLE");//TODO DELETE THIS
         //tvTheatre.setText(selectedTheater);
 
 
