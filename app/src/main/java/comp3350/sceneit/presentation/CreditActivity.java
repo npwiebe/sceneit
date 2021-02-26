@@ -103,9 +103,10 @@ public class CreditActivity extends AppCompatActivity implements View.OnClickLis
         } else if(!CreditManager.fieldFilled(email.getText().toString())){
             callAlert("Please fill in your email");
         } else{
+
             //This is here for when we link to the next activity. Like confirmation page
-            //Intent intent = new Intent(this, CreditActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }
