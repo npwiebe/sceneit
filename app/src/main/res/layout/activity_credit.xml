@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.CreditActivity" >
+    tools:context=".presentation.CreditActivity">
 
     <EditText
         android:id="@+id/email"
@@ -135,8 +135,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/card_number"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameCard" />
 
     <TextView
@@ -147,8 +147,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/name_on_card"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/puchaseInfo" />
 
     <TextView
@@ -195,8 +195,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/address_one"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/country" />
 
     <TextView
@@ -219,8 +219,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/city"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressTwo" />
 
     <TextView
@@ -230,10 +230,10 @@
         android:layout_marginStart="164dp"
         android:layout_marginLeft="164dp"
         android:text="@string/province"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/countryText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/countryText"
-        android:textSize="16sp"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -244,8 +244,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/telephone"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
     <TextView
@@ -255,10 +255,10 @@
         android:layout_marginStart="168dp"
         android:layout_marginLeft="168dp"
         android:text="@string/postal_code"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/cityText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cityText"
-        android:textSize="16sp"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -269,8 +269,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/email"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/telephoneNumber" />
 
     <Button
@@ -280,8 +280,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/confirmPurchase"
-        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/email" />
 
     <TextView
@@ -292,8 +292,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
         android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

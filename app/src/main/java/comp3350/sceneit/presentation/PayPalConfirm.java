@@ -1,10 +1,10 @@
 package comp3350.sceneit.presentation;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import comp3350.sceneit.R;
 
@@ -17,7 +17,7 @@ public class PayPalConfirm extends AppCompatActivity {
     }
 
     public void goHomePage(View view) {
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

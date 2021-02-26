@@ -1,7 +1,6 @@
 package comp3350.sceneit.data;
 
 import java.sql.Date;
-import java.util.Objects;
 
 public class Airing {
     int airingId;

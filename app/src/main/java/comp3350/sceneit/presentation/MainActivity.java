@@ -1,9 +1,5 @@
 package comp3350.sceneit.presentation;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,13 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
 import comp3350.sceneit.R;
 import comp3350.sceneit.data.DatabaseAccessException;
 import comp3350.sceneit.data.DatabaseManager;
-import comp3350.sceneit.data.PostgresDatabaseManager;
 import comp3350.sceneit.data.Movie;
+import comp3350.sceneit.data.PostgresDatabaseManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getNowPlayingDetails(){
+    private void getNowPlayingDetails() {
         Log.d(TAG, "getMovieDetails: preparing bitmaps.");
 
         mImageURL.add("https://static.wikia.nocookie.net/godzilla/images/4/43/Godzilla_vs_Kong_Poster.jpg/revision/latest?cb=20210121180804");
@@ -89,19 +89,16 @@ public class MainActivity extends AppCompatActivity {
         DatabaseManager dbm = new PostgresDatabaseManager();
         ArrayList<Movie> movies;
 
-        try
-        {
+        try {
             movies = dbm.getMovies();
 
-            for(Movie mv : movies)
-            {
+            for (Movie mv : movies) {
                 mTitle.add(mv.getTitle());
                 mRating.add(convertRating(mv.getRating()));
                 //Log.d(TAG, "URL result: " + mv.getPoster_url());
             }
 
-        } catch (DatabaseAccessException e)
-        {
+        } catch (DatabaseAccessException e) {
             Toast.makeText(this, "something went wrong.", Toast.LENGTH_LONG).show();
         }
 
@@ -172,8 +169,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //convert rating range from 0 - 100 to 0 - 5
-    private String convertRating(int value)
-    {
+    private String convertRating(int value) {
         double newRating = value * 0.05;
         return String.valueOf(newRating);
     }

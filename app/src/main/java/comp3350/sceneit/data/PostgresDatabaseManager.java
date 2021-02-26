@@ -9,14 +9,13 @@ import java.util.ArrayList;
 
 public class PostgresDatabaseManager implements DatabaseManager {
 
-    private Connection connection;
-
     // NOTE: These are RO credentials. When we implement users later, this will likely change to
     // allow authorised create/update/delete.
     private final String driver = "org.postgresql.Driver";
     private final String user = "rouser";
     private final String pass = "AGQLzuqwKFbDWh9i";
     private final String connection_string = "jdbc:postgresql://db.sceneit.linney.dev:5433/sceneit";
+    private Connection connection;
     private boolean status;
 
     public PostgresDatabaseManager() {
