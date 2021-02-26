@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">SceneIt</string>
+    <string name="email">Email</string>
+    <string name="name_on_card">Name on Card</string>
+    <string name="expDate">Expiration Date (mmyy)</string>
+    <string name="cvc">CVC</string>
+    <string name="card_number">Number on Card</string>
+    <string name="country">Country</string>
+    <string name="address_one">Address Line 1</string>
+    <string name="address_two">Address Line 2</string>
+    <string name="city">City</string>
+    <string name="province">State/Province/Region</string>
+    <string name="postal_code">Postal Code/ZIP</string>
+    <string name="telephone">Telephone Number</string>
+    <string name="confirmPurchase">Confirm Purchase</string>
 </resources>
