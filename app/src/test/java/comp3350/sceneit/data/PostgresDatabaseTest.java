@@ -38,6 +38,7 @@ public class PostgresDatabaseTest {
         assertTrue(movie_found);
     }
 
+
     @Test
     public void listTheatres() {
         DatabaseManager dbm = new PostgresDatabaseManager();
