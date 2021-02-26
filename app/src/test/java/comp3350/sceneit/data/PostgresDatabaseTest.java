@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -25,11 +26,16 @@ public class PostgresDatabaseTest {
         }
 
         assertFalse(movies.isEmpty());
-        Movie movie = movies.iterator().next();
+        boolean movie_found = false;
+        for (Movie movie : movies) {
+            if (movie.getMovieId() == 1) {
+                movie_found = true;
+                assertEquals(movie.getTitle(), "The Avengers");
+                assertEquals(movie.getDescription(), "When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!");
+            }
+        }
 
-        assertEquals(movie.getMovieId(), 1);
-        assertEquals(movie.getTitle(), "The Avengers");
-        assertEquals(movie.getDescription(), "When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!");
+        assertTrue(movie_found);
     }
 
     @Test
