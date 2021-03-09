@@ -28,7 +28,7 @@ import java.util.Date;
 
 import comp3350.sceneit.R;
 import comp3350.sceneit.data.Airing;
-import comp3350.sceneit.data.DatabaseAccessException;
+import comp3350.sceneit.data.exceptions.DatabaseAccessException;
 import comp3350.sceneit.data.DatabaseManager;
 import comp3350.sceneit.data.Movie;
 import comp3350.sceneit.data.PostgresDatabaseManager;

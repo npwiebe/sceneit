@@ -7,6 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import comp3350.sceneit.data.exceptions.AiringNotFoundException;
+import comp3350.sceneit.data.exceptions.DatabaseAccessException;
+import comp3350.sceneit.data.exceptions.MovieNotFoundException;
+import comp3350.sceneit.data.exceptions.TheatreNotFoundException;
+
 public class PostgresDatabaseManager implements DatabaseManager {
 
     // NOTE: These are RO credentials. When we implement users later, this will likely change to

@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import comp3350.sceneit.data.exceptions.AiringNotFoundException;
+import comp3350.sceneit.data.exceptions.DatabaseAccessException;
+import comp3350.sceneit.data.exceptions.MovieNotFoundException;
+import comp3350.sceneit.data.exceptions.TheatreNotFoundException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

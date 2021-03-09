@@ -1,4 +1,4 @@
-package comp3350.sceneit.data;
+package comp3350.sceneit.data.exceptions;
 
 import java.sql.SQLException;
 
