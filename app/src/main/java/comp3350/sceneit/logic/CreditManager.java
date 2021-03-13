@@ -1,11 +1,64 @@
 package comp3350.sceneit.logic;
 
+import android.content.Intent;
+
 import java.util.Calendar;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import comp3350.sceneit.presentation.MainActivity;
+
 public class CreditManager {
+
+    //Check postal code for Canada and USA
+    static public boolean checkPostal(String data){
+        //Regex for canadaian and us postal codes
+        Pattern pCan = Pattern.compile("^[A-Za-z]\\d[A-Za-z][ -]?\\d[A-Za-z]\\d$");
+        Pattern pUS = Pattern.compile("^[0-9]{5}(?:-[0-9]{4})?$");
+
+        Matcher mCan = pCan.matcher(data);
+        Matcher mUS = pUS.matcher(data);
+        //see if the string fits the specifications of the regex.
+        Boolean foundCan = (mCan.find() && mCan.group().equals(data));
+        Boolean foundUS = (mUS.find() && mUS.group().equals(data));
+
+        return foundCan || foundUS;
+    }
+
+    //Check if email is valid
+    static public boolean checkEmail(String data){
+        Pattern p = Pattern.compile("^(.+)@(.+)$");
+
+        Matcher m = p.matcher(data);
+        return (m.find() && m.group().equals(data));
+    }
+
+    //Check if phone is valid using the ITU-T E.164 standard
+    //https://en.wikipedia.org/wiki/E.164
+    //Assuming strings passed could have or could not have a plus sign.
+    static public boolean checkPhone(String data) {
+        boolean foundNational;
+        Matcher mNational;
+        Pattern pNational = Pattern.compile("^\\+(?:[0-9] ?){6,14}[0-9]$");
+
+        //Making it so dont have to worry about there being a plus sign of not
+        //could change the regex to handle it but thats black magic im not touching
+        if(!data.isEmpty() && data.charAt(0) == ('+')) {
+            mNational = pNational.matcher(data);
+            foundNational = (mNational.find() && mNational.group().equals(data));
+        } else {
+            mNational = pNational.matcher("+" + data);
+            foundNational = (mNational.find() && mNational.group().equals("+" + data));
+        }
+
+        return foundNational;
+    }
+
     //Checks if a string has any data in it.
     static public boolean fieldFilled(String data) {
-        return data != null && data.length() != 0;
+        //return data != null && data.length() != 0;
+        return data != null && !data.isEmpty() && data.trim().length() > 0;
     }
 
     //checks if a the date given in mmyy format (it assumes its that format) is after the currect date
@@ -95,5 +148,39 @@ public class CreditManager {
         }
 
         return total;
+    }
+
+    //Validate all the info in a credit card is correct, if it is then dont need to send an error message back
+    //However if there is a problem then send back an error message.
+    static public String validateInput(CreditCard myCard) {
+        String message = null;
+
+        if(myCard != null){
+            if (!validateCredit(myCard.getNumberCard())) {
+                message = "Invalid Credit Card Number";
+            } else if (!fieldFilled(myCard.getNameCard())) {
+                message = "Please fill in the name located on your Credit card";
+            } else if (!fieldFilled(myCard.getCvc())) {
+                message = "Please fill in the cvc located on your Credit card";
+            } else if (!checkDate(myCard.getExpDate())) {
+                message = "This card may be expired, check your expiry date";
+            } else if (!fieldFilled(myCard.getCountry())) {
+                message = "Please fill in your country";
+            } else if (!fieldFilled(myCard.getProvince())) {
+                message = "Please fill in your Region/Province/State";
+            } else if (!fieldFilled(myCard.getAddressOne())) {
+                message = "Please fill in your Address One";
+            } else if (!fieldFilled(myCard.getCity())) {
+                message = "Please fill in your city";
+            } else if (!checkPostal(myCard.getPostalCode())) {
+                message = "Please fill in your Postal Code";
+            } else if (!checkPhone(myCard.getTelephoneNumber())) {
+                message = "Please fill in your Telephone";
+            } else if (!checkEmail(myCard.getEmail())) {
+                message = "Please fill in your email";
+            }
+        }
+
+        return message;
     }
 }

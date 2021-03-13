@@ -11,6 +11,60 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CreditManagerTest {
+
+    @Test
+    public void testCheckPostal(){
+        //Test thats are more so for Canadian Codes
+        assertTrue(CreditManager.checkPostal("R0C2Z0"));
+        assertTrue(CreditManager.checkPostal("R0C 2Z0"));
+        assertFalse(CreditManager.checkPostal("R0C2Z"));
+        assertFalse(CreditManager.checkPostal("0C2Z0"));
+        assertFalse(CreditManager.checkPostal("RRRRRR"));
+        assertFalse(CreditManager.checkPostal("000000"));
+        assertFalse(CreditManager.checkPostal(""));
+        assertFalse(CreditManager.checkPostal("R0C2Z0R"));
+        assertFalse(CreditManager.checkPostal("0R0C2Z0"));
+
+        //tests for the US codes
+        assertTrue(CreditManager.checkPostal("08884"));
+        assertTrue(CreditManager.checkPostal("12345"));
+        assertTrue(CreditManager.checkPostal("12345-6789"));
+        assertFalse(CreditManager.checkPostal("1234"));
+        assertFalse(CreditManager.checkPostal("123456"));
+        assertFalse(CreditManager.checkPostal("123456789"));
+        assertFalse(CreditManager.checkPostal("1234-56789"));
+    }
+
+    @Test
+    public void testCheckEmail(){
+        assertTrue(CreditManager.checkEmail("Jonathan.Boisvert@umanitoba.ca"));
+        assertTrue(CreditManager.checkEmail("deadservice@hotmail.com"));
+        assertTrue(CreditManager.checkEmail("bob@default"));
+        assertFalse(CreditManager.checkEmail(""));
+        assertFalse(CreditManager.checkEmail("THIS IS NOT EMAIL"));
+        assertFalse(CreditManager.checkEmail("google.com"));
+        assertFalse(CreditManager.checkEmail("@email.com"));
+    }
+
+    @Test
+    public void testCheckPhone() {
+        //american numbers
+        assertTrue(CreditManager.checkPhone("2044613456"));
+        assertTrue(CreditManager.checkPhone("204 461 3498"));
+        //Not numbers at all
+        assertFalse(CreditManager.checkPhone("Frank"));
+        assertFalse(CreditManager.checkPhone(""));
+        //correct international numbers, also testing both sides of an if
+        assertTrue(CreditManager.checkPhone("+1 1234567890123"));
+        assertTrue(CreditManager.checkPhone("1 1234567890123"));
+        assertTrue(CreditManager.checkPhone("+12 123456789"));
+        assertTrue(CreditManager.checkPhone("12 123456789"));
+        assertTrue(CreditManager.checkPhone("+123 123456"));
+        assertTrue(CreditManager.checkPhone("123 123456"));
+        //too long
+        assertFalse(CreditManager.checkPhone("+1 123456789012333"));
+    }
+
     @Test
     public void testReverse() {
         assertEquals(CreditManager.reverseNumber(1962), 2691);
@@ -66,5 +120,9 @@ public class CreditManagerTest {
         assertTrue(CreditManager.fieldFilled("D"));
         assertFalse(CreditManager.fieldFilled(""));
         assertFalse(CreditManager.fieldFilled(null));
+        assertFalse(CreditManager.fieldFilled("    "));
+        assertTrue(CreditManager.fieldFilled("T    "));
+        assertTrue(CreditManager.fieldFilled("    T"));
+        assertTrue(CreditManager.fieldFilled("  T  "));
     }
 }
