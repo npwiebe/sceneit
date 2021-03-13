@@ -12,19 +12,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SceneIt">
-        <activity android:name=".presentation.PayPalPayment"></activity>
-        <activity android:name=".presentation.addCreditCard"></activity>
-        <activity android:name=".presentation.PayPalConfirm" />
-        <activity android:name=".presentation.CreditActivity"></activity>
-        <activity android:name=".presentation.MainActivity">
+        <activity android:name=".presentation.SignUpActivity"></activity>
+        <activity android:name=".presentation.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.OrderActivity"></activity>
-        <activity android:name=".presentation.SearchActivity"></activity>
+        <activity android:name=".presentation.PayPalPayment" />
+        <activity android:name=".presentation.addCreditCard" />
+        <activity android:name=".presentation.PayPalConfirm" />
+        <activity android:name=".presentation.CreditActivity" />
+        <activity android:name=".presentation.MainActivity">
+        </activity>
+        <activity android:name=".presentation.OrderActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
