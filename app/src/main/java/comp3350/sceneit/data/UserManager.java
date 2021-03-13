@@ -10,10 +10,11 @@ public interface UserManager {
      * @param username The username to use
      * @param password The password to use
      * @param name The users name, Ex. Joe Smoe
+     * @param email The users email address
      * @return The logged in users info
      * @throws UserExistsException if the user already exists
      */
-    public User register(String username, String password, String name) throws UserExistsException;
+    public User register(String username, String password, String name, String email) throws UserExistsException;
 
     /**
      * Login as a user
