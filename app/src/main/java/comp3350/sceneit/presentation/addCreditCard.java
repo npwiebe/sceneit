@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import comp3350.sceneit.logic.CreditManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -82,9 +83,10 @@ public class addCreditCard extends AppCompatActivity {
         boolean result = false;
         if (card_num_input.isEmpty()) {
             card_num.setError("Field can't be empty");
-        } else if (card_num_input.length() < 16) {
+        } else if (card_num_input.length() < 16 || !CreditManager.validateCredit(card_num.getText().toString())) {
             card_num.setError("Card number is not valid");
-        } else {
+        }
+        else{
             card_num.setError(null);
             result = true;
         }
@@ -134,7 +136,7 @@ public class addCreditCard extends AppCompatActivity {
     //Save the credit card information
     public void doSave(View view) {
         //if any information is not correct then
-        if (!validateCardName() | !validateCardNum() | !validateExpDate() | !validateCVV()) {
+        if (!validateCardName() | !validateCardNum() | !validateExpDate() | !validateCVV() ) {
             return;
         } else {
             //get all the values in String
@@ -147,6 +149,7 @@ public class addCreditCard extends AppCompatActivity {
 
         }
     }
+
 
 
 }
