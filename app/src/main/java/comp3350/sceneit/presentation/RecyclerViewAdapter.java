@@ -27,24 +27,49 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "RecyclerViewAdapter";
 
     private Context mContext;
-    private ArrayList<String> mImageURL = new ArrayList<>();
-    private ArrayList<String> mTitle = new ArrayList<>();
-    private ArrayList<String> mRating = new ArrayList<>();
+    private ArrayList<String> mImageURL;
+    private ArrayList<String> mTitle;
+    private ArrayList<String> mRating;
     private int carouselView = 0;
+    private IMovieClickListener mMovieClickListener;
 
-    public RecyclerViewAdapter(Context mContext, ArrayList<String> mImageURL, ArrayList<String> mTitle, ArrayList<String> mRating, int carouselView) {
+    public RecyclerViewAdapter(Context mContext, ArrayList<String> mImageURL, ArrayList<String> mTitle, ArrayList<String> mRating, int carouselView, IMovieClickListener movieClickListener) {
         this.mContext = mContext;
         this.mImageURL = mImageURL;
         this.mTitle = mTitle;
         this.mRating = mRating;
         this.carouselView = carouselView;
+        this.mMovieClickListener = movieClickListener;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView moviePoster;
+        TextView movieTitle;
+        RatingBar movieRating;
+        IMovieClickListener movieClickListener;
+
+        public ViewHolder(@NonNull View itemView, IMovieClickListener movieClickListener) {
+            super(itemView);
+
+            moviePoster = itemView.findViewById(R.id.ivMoviePoster);
+            movieTitle = itemView.findViewById(R.id.tvMovieTitle);
+            movieRating = itemView.findViewById(R.id.rbMovieRating);
+            this.movieClickListener = movieClickListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            movieClickListener.movieClick(getAdapterPosition(), carouselView);
+        }
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(carouselView, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mMovieClickListener);
     }
 
     @Override
@@ -54,28 +79,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.movieTitle.setText(mTitle.get(position));
 
         holder.movieRating.setRating(Float.parseFloat(mRating.get(position)));
-
-        holder.moviePoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on an image: " + mTitle.get(position));
-                Toast.makeText(mContext, mTitle.get(position), Toast.LENGTH_LONG).show();
-
-                Bundle movieDetails = new Bundle();
-
-                movieDetails.putString("movieTitle", mTitle.get(position));
-                movieDetails.putString("moviePoster", mImageURL.get(position));
-                movieDetails.putString("movieRating", mRating.get(position));
-                //movieDetails.putString("theatreLocation", theatreLocation);
-
-                Log.d(TAG, "movie: " + mTitle.get(position) + " " + mImageURL.get(position) + " " + mRating.get(position));
-
-                Intent intent = new Intent(mContext, OrderActivity.class);
-                intent.putExtras(movieDetails);
-                mContext.startActivity(intent);
-            }
-        });
-
     }
 
     @Override
@@ -83,17 +86,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mTitle.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView moviePoster;
-        TextView movieTitle;
-        RatingBar movieRating;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            moviePoster = itemView.findViewById(R.id.ivMoviePoster);
-            movieTitle = itemView.findViewById(R.id.tvMovieTitle);
-            movieRating = itemView.findViewById(R.id.rbMovieRating);
-        }
-    }
 }

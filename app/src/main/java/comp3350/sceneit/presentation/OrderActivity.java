@@ -96,7 +96,7 @@ public class OrderActivity extends AppCompatActivity {
         tvMovieTitle.setText(selectedMovie.getTitle());
         tvDescription.setText(selectedMovie.getDescription());
         //tvTheatre.setText("TEST CHANGE TO BUNDLE WHEN POSSIBLE");//TODO DELETE THIS
-        //tvTheatre.setText(selectedTheater);
+        tvTheatre.setText(selectedTheater);
 
 
         //Initialize calender and watcher for calender

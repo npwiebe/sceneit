@@ -2,6 +2,7 @@ package comp3350.sceneit.presentation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,7 @@ import comp3350.sceneit.data.DatabaseManager;
 import comp3350.sceneit.data.Movie;
 import comp3350.sceneit.data.PostgresDatabaseManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMovieClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             "Cinematheque", "Burton Cummings Theatre", "Landmark Cinemas Garry Theatre"};
 
     private RecyclerView recyclerView;
+
+    private TextView tvTheatreLocation;
 
 
     @Override
@@ -71,9 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getNowPlayingDetails() {
-        Log.d(TAG, "getMovieDetails: preparing bitmaps.");
-
+    private void getNowPlayingDetails(){
         mImageURL.add("https://static.wikia.nocookie.net/godzilla/images/4/43/Godzilla_vs_Kong_Poster.jpg/revision/latest?cb=20210121180804");
         mImageURL.add("https://i5.walmartimages.com/asr/7ea01e0a-22b0-4bf8-8698-5c2e9bde87cb_1.5cfd5de0b85f9ab768f2a367474d4f8b.jpeg");
         mImageURL.add("https://www.joblo.com/assets/images/oldsite/posters/images/full/02_AVG_Online1Sht_UK2_rgb_thumb.jpg");
@@ -85,21 +86,24 @@ public class MainActivity extends AppCompatActivity {
         DatabaseManager dbm = new PostgresDatabaseManager();
         ArrayList<Movie> movies;
 
-        try {
+        try
+        {
             movies = dbm.getMovies();
 
-            for (Movie mv : movies) {
+            for(Movie mv : movies)
+            {
                 mTitle.add(mv.getTitle());
                 mRating.add(convertRating(mv.getRating()));
                 //Log.d(TAG, "URL result: " + mv.getPoster_url());
             }
 
-        } catch (DatabaseAccessException e) {
+        } catch (DatabaseAccessException e)
+        {
             Toast.makeText(this, "something went wrong.", Toast.LENGTH_LONG).show();
         }
 
         display(R.id.rvNowPlaying, 50);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageURL, mTitle, mRating, R.layout.now_playing_carousel_item);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageURL, mTitle, mRating, R.layout.now_playing_carousel_item, this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         tRating.add("4");
 
         display(R.id.rvTrending, 50);
-        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this, tImageURL, tTitle, tRating, R.layout.trending_carousel_item);
+        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this, tImageURL, tTitle, tRating, R.layout.trending_carousel_item, this);
         recyclerView.setAdapter(adapter1);
     }
 
@@ -148,13 +152,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void chooseTheatre() {
-        TextView tvTheatreLocation = (TextView) findViewById(R.id.tvTheaterName);
+        tvTheatreLocation = (TextView) findViewById(R.id.tvTheaterName);
 
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose a Theater");
         builder.setItems(theatre, new DialogInterface.OnClickListener() {
-            //@Override
+            @Override
             public void onClick(DialogInterface dialog, int which) {
                 tvTheatreLocation.setText(theatre[which]);
             }
@@ -165,9 +169,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //convert rating range from 0 - 100 to 0 - 5
-    private String convertRating(int value) {
+    private String convertRating(int value)
+    {
         double newRating = value * 0.05;
         return String.valueOf(newRating);
+    }
+
+    @Override
+    public void movieClick(int position, int carouselViewType) {
+        Bundle movieDetails = new Bundle();
+
+        if(carouselViewType == R.layout.now_playing_carousel_item) {
+            movieDetails.putString("movieTitle", mTitle.get(position));
+            movieDetails.putString("moviePoster", mImageURL.get(position));
+            movieDetails.putString("movieRating", mRating.get(position));
+
+            Log.d(TAG, "Data passed: " + mTitle.get(position) + " " + mImageURL.get(position) +
+                    " " + mRating.get(position) + " " + tvTheatreLocation.getText().toString());
+        }
+        else {
+            movieDetails.putString("movieTitle", tTitle.get(position));
+            movieDetails.putString("moviePoster", tImageURL.get(position));
+            movieDetails.putString("movieRating", tRating.get(position));
+
+            Log.d(TAG, "Trending data passed: " + tTitle.get(position) + " " + tImageURL.get(position) +
+                    " " + tRating.get(position) + " " + tvTheatreLocation.getText().toString());
+        }
+
+        movieDetails.putString("theater", tvTheatreLocation.getText().toString());
+
+        Intent intent = new Intent(this, OrderActivity.class);
+        intent.putExtras(movieDetails);
+        this.startActivity(intent);
     }
 
 }
