@@ -60,15 +60,6 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-        // HACK!!
-        // So sorry this is necessary. due to the current way the DatabaseManager is implemented,
-        // this is necessary for this to work in iteration 1. This will allow network requests on
-        // the main thread.
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        // HACK!!
-
-
         Bundle b = getIntent().getExtras();
         selectedMovieTitle = b.getString("movieTitle");
         selectedMovieRating = b.getString("movieRating");

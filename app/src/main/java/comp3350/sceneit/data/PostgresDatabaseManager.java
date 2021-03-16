@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PostgresDatabaseManager implements DatabaseManager {
 
@@ -16,7 +18,6 @@ public class PostgresDatabaseManager implements DatabaseManager {
     private final String pass = "AGQLzuqwKFbDWh9i";
     private final String connection_string = "jdbc:postgresql://db.sceneit.linney.dev:5433/sceneit";
     private Connection connection;
-    private boolean status;
 
     public PostgresDatabaseManager() {
         connect();
@@ -68,144 +69,249 @@ public class PostgresDatabaseManager implements DatabaseManager {
 
     @Override
     public ArrayList<Movie> getMovies() throws DatabaseAccessException {
-        ArrayList<Movie> movies = new ArrayList<>();
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from movies;");
-            while (rs.next()) {
-                movies.add(getMovieFromResultSet(rs));
-            }
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
 
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+        ArrayList<Movie> movies = new ArrayList<>();
+
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery("select * from movies;");
+                while (rs.next()) {
+                    movies.add(getMovieFromResultSet(rs));
+                }
+
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
+
+
+        // Check to see if the thread errored.
+        if (raised.get()) throw new DatabaseAccessException();
+
 
         return movies;
     }
 
     @Override
     public ArrayList<Theatre> getTheatres() throws DatabaseAccessException {
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
+
         ArrayList<Theatre> theatres = new ArrayList<>();
 
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from theatres;");
-            while (rs.next()) {
-                theatres.add(getTheatreFromResultSet(rs));
-            }
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery("select * from theatres;");
+                while (rs.next()) {
+                    theatres.add(getTheatreFromResultSet(rs));
+                }
 
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
+
+        // Check to see if the thread errored.
+        if (raised.get()) throw new DatabaseAccessException();
 
         return theatres;
     }
 
     @Override
     public ArrayList<Airing> getAirings(int movie_id) throws DatabaseAccessException {
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
+
         ArrayList<Airing> airings = new ArrayList<>();
 
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery(
-                    String.format(
-                            "select * from airings where movie_id = %s;",
-                            movie_id
-                    )
-            );
 
-            while (rs.next()) {
-                airings.add(getAiringFromResultSet(rs));
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery(
+                        String.format(
+                                "select * from airings where movie_id = %s;",
+                                movie_id
+                        )
+                );
+
+                while (rs.next()) {
+                    airings.add(getAiringFromResultSet(rs));
+                }
+
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
             }
-
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
+
+        // Check to see if the thread errored.
+        if (raised.get()) throw new DatabaseAccessException();
 
         return airings;
     }
 
     @Override
     public Movie getMovie(int movie_id) throws DatabaseAccessException, MovieNotFoundException {
-        Movie result;
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery(
-                    String.format(
-                            "select * from movies where movie_id = %d;",
-                            movie_id
-                    )
-            );
-            if (rs.next()) {
-                result = getMovieFromResultSet(rs);
-            } else {
-                throw new MovieNotFoundException();
-            }
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
+        AtomicBoolean raisedNotFound = new AtomicBoolean(false);
 
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+        AtomicReference<Movie> result = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery(
+                        String.format(
+                                "select * from movies where movie_id = %d;",
+                                movie_id
+                        )
+                );
+                if (rs.next()) {
+                    result.set(getMovieFromResultSet(rs));
+                } else {
+                    raisedNotFound.set(true);
+                }
+
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
 
-        return result;
+
+        // Check to see if the thread errored.
+        if (raisedNotFound.get()) throw new MovieNotFoundException();
+        if (raised.get()) throw new DatabaseAccessException();
+
+        return result.get();
     }
 
     @Override
     public Theatre getTheatre(int theatre_id) throws DatabaseAccessException, TheatreNotFoundException {
-        Theatre result;
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery(
-                    String.format(
-                            "select * from theatres where theatre_id = %d;",
-                            theatre_id
-                    )
-            );
-            if (rs.next()) {
-                result = getTheatreFromResultSet(rs);
-            } else {
-                throw new TheatreNotFoundException();
-            }
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
+        AtomicBoolean raisedNotFound = new AtomicBoolean(false);
 
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+
+        AtomicReference<Theatre> result = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery(
+                        String.format(
+                                "select * from theatres where theatre_id = %d;",
+                                theatre_id
+                        )
+                );
+                if (rs.next()) {
+                    result.set(getTheatreFromResultSet(rs));
+                } else {
+                    raisedNotFound.set(true);
+                }
+
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
 
-        return result;
+
+        // Check to see if the thread errored.
+        if (raisedNotFound.get()) throw new TheatreNotFoundException();
+        if (raised.get()) throw new DatabaseAccessException();
+
+        return result.get();
     }
 
     @Override
     public Airing getAiring(int airing_id) throws DatabaseAccessException, AiringNotFoundException {
-        Airing result;
-        try {
-            Statement statement = this.connection.createStatement();
-            ResultSet rs = statement.executeQuery(
-                    String.format(
-                            "select * from airings where airings_id = %d;",
-                            airing_id
-                    )
-            );
-            if (rs.next()) {
-                result = getAiringFromResultSet(rs);
-            } else {
-                throw new AiringNotFoundException();
-            }
+        // Atomic boolean is necessary as the bool may be accessed from other threads. This boolean
+        // is used to determine if the thread had an error.
+        AtomicBoolean raised = new AtomicBoolean(false);
+        AtomicBoolean raisedNotFound = new AtomicBoolean(false);
 
-            rs.close();
-            statement.close();
-        } catch (SQLException e) {
+
+        AtomicReference<Airing> result = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try {
+                Statement statement = this.connection.createStatement();
+                ResultSet rs = statement.executeQuery(
+                        String.format(
+                                "select * from airings where airings_id = %d;",
+                                airing_id
+                        )
+                );
+                if (rs.next()) {
+                    result.set(getAiringFromResultSet(rs));
+                } else {
+                    raisedNotFound.set(true);
+                }
+
+                rs.close();
+                statement.close();
+            } catch (SQLException e) {
+                raised.set(true);
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
             throw new DatabaseAccessException();
         }
 
-        return result;
+
+        // Check to see if the thread errored.
+        if (raisedNotFound.get()) throw new AiringNotFoundException();
+        if (raised.get()) throw new DatabaseAccessException();
+
+        return result.get();
     }
 }
