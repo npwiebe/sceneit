@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -119,6 +120,15 @@ public class PostgresDatabaseTest {
     }
 
     @Test
+    public void getMovieNotFound() {
+        DatabaseManager dbm = new PostgresDatabaseManager();
+
+        assertThrows(MovieNotFoundException.class, () -> {
+            dbm.getMovie(-1);
+        });
+    }
+
+    @Test
     public void getTheatre() {
         DatabaseManager dbm = new PostgresDatabaseManager();
         Theatre theatre;
@@ -135,6 +145,15 @@ public class PostgresDatabaseTest {
         assertEquals(theatre.getTheatreId(), 1);
         assertEquals(theatre.getName(), "SilverCity St. Vital");
         assertEquals(theatre.getLocation(), "160-1225 St Mary's Rd, Winnipeg, MB R2M 5E5");
+    }
+
+    @Test
+    public void getTheatreNotFound() {
+        DatabaseManager dbm = new PostgresDatabaseManager();
+
+        assertThrows(TheatreNotFoundException.class, () -> {
+            dbm.getTheatre(-1);
+        });
     }
 
     @Test
@@ -159,5 +178,14 @@ public class PostgresDatabaseTest {
         assertEquals(airing.getTheatreId(), 1);
         assertEquals(airing.getTotalSeats(), 100);
         assertEquals(airing.getAvailableSeats(), 100);
+    }
+
+    @Test
+    public void getAiringNotFound() {
+        DatabaseManager dbm = new PostgresDatabaseManager();
+
+        assertThrows(AiringNotFoundException.class, () -> {
+            dbm.getAiring(-1);
+        });
     }
 }
