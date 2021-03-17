@@ -72,6 +72,22 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
             }
         });
 
+        //OnClickListener for search
+        ImageView imgSearch = (ImageView) findViewById(R.id.ivSearch);
+        imgSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, SearchActivity.class);
+
+                //Send data to SearchActivity
+                i.putStringArrayListExtra("mTitle", mTitle);
+                i.putStringArrayListExtra("mRating", mRating);
+                i.putExtra("theater", tvTheatreLocation.getText().toString());
+
+                startActivity(i);
+            }
+        });
+
     }
 
     private void getNowPlayingDetails(){
@@ -89,23 +105,19 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
         try
         {
             movies = dbm.getMovies();
-
             for(Movie mv : movies)
             {
                 mTitle.add(mv.getTitle());
                 mRating.add(convertRating(mv.getRating()));
-                //Log.d(TAG, "URL result: " + mv.getPoster_url());
             }
-
         } catch (DatabaseAccessException e)
         {
-            Toast.makeText(this, "something went wrong.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         display(R.id.rvNowPlaying, 50);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageURL, mTitle, mRating, R.layout.now_playing_carousel_item, this);
         recyclerView.setAdapter(adapter);
-
     }
 
     private void getTrending() {
@@ -179,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     public void movieClick(int position, int carouselViewType) {
         Bundle movieDetails = new Bundle();
 
+        //check which recyclerView is being clicked before passing data
         if(carouselViewType == R.layout.now_playing_carousel_item) {
             movieDetails.putString("movieTitle", mTitle.get(position));
             movieDetails.putString("moviePoster", mImageURL.get(position));

@@ -30,7 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> mImageURL;
     private ArrayList<String> mTitle;
     private ArrayList<String> mRating;
-    private int carouselView = 0;
+    private int carouselView;
     private IMovieClickListener mMovieClickListener;
 
     public RecyclerViewAdapter(Context mContext, ArrayList<String> mImageURL, ArrayList<String> mTitle, ArrayList<String> mRating, int carouselView, IMovieClickListener movieClickListener) {
@@ -85,5 +85,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return mTitle.size();
     }
-
 }
