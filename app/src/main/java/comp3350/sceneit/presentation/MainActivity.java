@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
             "Cinematheque", "Burton Cummings Theatre", "Landmark Cinemas Garry Theatre"};
 
     private RecyclerView recyclerView;
-
     private TextView tvTheatreLocation;
 
 
@@ -50,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tvTheatreLocation = (TextView) findViewById(R.id.tvTheaterName);
+        tvTheatreLocation.setText(theatre[0]);
 
         getNowPlayingDetails();
         getTrending();
