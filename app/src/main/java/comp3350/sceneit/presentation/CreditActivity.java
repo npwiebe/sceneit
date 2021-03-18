@@ -11,22 +11,27 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import comp3350.sceneit.R;
+import comp3350.sceneit.logic.CreditCard;
 import comp3350.sceneit.logic.CreditManager;
 
 public class CreditActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String message;
     private EditText nameCard, numberCard, cvc, expDate, country, province,
-            addressOne, city, postalCode, telephoneNumber, email;
+            addressOne, addressTwo, city, postalCode, telephoneNumber, email;
     private TextView purchaseDisplay;
     private Button submitButton;
+    private CreditCard myCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
 
+        myCard = new CreditCard();
         //initialize buttons, text views, and edit texts
         //All the EditTexts are named the same as their ids
         purchaseDisplay = (TextView) findViewById(R.id.puchaseInfo);
@@ -38,6 +43,7 @@ public class CreditActivity extends AppCompatActivity implements View.OnClickLis
         country = (EditText) findViewById(R.id.country);
         province = (EditText) findViewById(R.id.province);
         addressOne = (EditText) findViewById(R.id.addressOne);
+        addressTwo = (EditText) findViewById(R.id.addressTwo);
         city = (EditText) findViewById(R.id.city);
         postalCode = (EditText) findViewById(R.id.postalCode);
         telephoneNumber = (EditText) findViewById(R.id.telephoneNumber);
@@ -76,37 +82,34 @@ public class CreditActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        //This is a lot of statements to go through each field I know
-        //Couldnt figure out a way to go through each field and also have a unique message.
-        if (!CreditManager.validateCredit(numberCard.getText().toString())) {
-            callAlert("Invalid Credit Card Number");
-        } else if (!CreditManager.fieldFilled(nameCard.getText().toString())) {
-            callAlert("Please fill in the name located on your Credit card");
-        } else if (!CreditManager.fieldFilled(cvc.getText().toString())) {
-            callAlert("Please fill in the cvc located on your Credit card");
-        } else if (!CreditManager.checkDate(expDate.getText().toString())) {
-            callAlert("This card may be expired, check your expiry date");
-        } else if (!CreditManager.fieldFilled(country.getText().toString())) {
-            callAlert("Please fill in your country");
-        } else if (!CreditManager.fieldFilled(province.getText().toString())) {
-            callAlert("Please fill in your Region/Province/State");
-        } else if (!CreditManager.fieldFilled(addressOne.getText().toString())) {
-            callAlert("Please fill in your Address One");
-        } else if (!CreditManager.fieldFilled(cvc.getText().toString())) {
-            callAlert("Please fill in the cvc located on your Credit card");
-        } else if (!CreditManager.fieldFilled(cvc.getText().toString())) {
-            callAlert("Please fill in your city");
-        } else if (!CreditManager.fieldFilled(postalCode.getText().toString())) {
-            callAlert("Please fill in your Postal Code");
-        } else if (!CreditManager.fieldFilled(telephoneNumber.getText().toString())) {
-            callAlert("Please fill in your Telephone");
-        } else if (!CreditManager.fieldFilled(email.getText().toString())) {
-            callAlert("Please fill in your email");
+        //fill our card with the users input and then check if its correct.
+        fillCreditCard();
+        String error = CreditManager.validateInput(myCard);
+
+        //if the error is null that means no problems were found
+        if(error != null){
+            callAlert(error);
         } else {
 
             //This is here for when we link to the next activity. Like confirmation page
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    //Fills up the credit card with all the info from the fields the user filled in.
+    public void fillCreditCard(){
+        myCard.setNumberCard(numberCard.getText().toString());
+        myCard.setNameCard(nameCard.getText().toString());
+        myCard.setCvc(cvc.getText().toString());
+        myCard.setExpDate(expDate.getText().toString());
+        myCard.setCountry(country.getText().toString());
+        myCard.setProvince(province.getText().toString());
+        myCard.setAddressOne(addressOne.getText().toString());
+        myCard.setAddressTwo(addressTwo.getText().toString());
+        myCard.setCity(city.getText().toString());
+        myCard.setPostalCode(postalCode.getText().toString());
+        myCard.setTelephoneNumber(telephoneNumber.getText().toString());
+        myCard.setEmail(email.getText().toString());
     }
 }
