@@ -1,4 +1,4 @@
-package comp3350.sceneit;
+package comp3350.sceneit.logic;
 
 import org.junit.Test;
 

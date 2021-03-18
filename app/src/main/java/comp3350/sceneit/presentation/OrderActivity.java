@@ -5,11 +5,12 @@ import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -32,7 +33,8 @@ import comp3350.sceneit.data.exceptions.DatabaseAccessException;
 import comp3350.sceneit.data.DatabaseManager;
 import comp3350.sceneit.data.Movie;
 import comp3350.sceneit.data.PostgresDatabaseManager;
-import comp3350.sceneit.logic.TicketLogic;
+import comp3350.sceneit.data.StubAirings;
+import comp3350.sceneit.logic.StandardTicketLogic;
 
 public class OrderActivity extends AppCompatActivity {
 
@@ -43,8 +45,10 @@ public class OrderActivity extends AppCompatActivity {
     private DatabaseManager dbm;
     private ArrayList<Airing> airings = new ArrayList<>();
     private ArrayList<Movie> movies = new ArrayList<>();
-    private String selectedTheater, selectedMovieTitle, selectedMovieRating;
+    private String selectedTheater = "NULL", selectedMovieTitle = "NULL", selectedMovieRating = "NULL";
     private String[] airingTimes = {};
+    private StubAirings stubAirings;
+
 
     //UI XML linked Variables
     private ToggleButton[] airingButtons;
@@ -52,6 +56,9 @@ public class OrderActivity extends AppCompatActivity {
     private ImageView ivMovieImg;
     private TextView tvPrice, tvMovieTitle, tvTheatre, tvDescription;
     private Button orderButton;
+
+    //constants
+    private final int MAX_TICKETS = 10;
 
 
     @SuppressLint("ResourceType")
@@ -113,6 +120,8 @@ public class OrderActivity extends AppCompatActivity {
      * This method also calls checkOrderButtonConditions(), as those conditions may change over the course of execution
      */
     private void ticketInputHandler() {
+       // eTNumOfTickets.setRawInputType(Configuration.KEYBOARD_12KEY);
+        eTNumOfTickets.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         TextWatcher textWatcher1 = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -124,14 +133,21 @@ public class OrderActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str;
                 try {
                     numOfTickets = Integer.parseInt(s.toString());
+
+                    if (StandardTicketLogic.ticketOverage(numOfTickets)) {
+                        eTNumOfTickets.removeTextChangedListener(this);
+                        numOfTickets = StandardTicketLogic.getMaxTickets();
+                        s.replace(0,s.length(),Integer.toString(numOfTickets));
+                        eTNumOfTickets.addTextChangedListener(this);
+                    }
+
                 } catch (NumberFormatException e) {
                     numOfTickets = 0;
                 }
-                price = TicketLogic.totalOrderPrice(numOfTickets, selectedMovie);
-                tvPrice.setText("$" + TicketLogic.totalOrderPrice(numOfTickets, selectedMovie));
+                price = StandardTicketLogic.totalOrderPrice(numOfTickets);
+                tvPrice.setText("$" + StandardTicketLogic.totalOrderPrice(numOfTickets));
                 if (airingButtons != null)
                     checkOrderButtonConditions();
             }
@@ -152,39 +168,43 @@ public class OrderActivity extends AppCompatActivity {
      * @param eText
      */
     protected void calenderHandler(EditText eText) {
+
         eText.setInputType(InputType.TYPE_NULL);
-        eText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout ll = (LinearLayout) findViewById(R.id.toggleButtons);
-                ll.removeAllViews();
-
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
+        eText.setOnClickListener((View.OnClickListener) v -> {
+            eText.setEnabled(false);
+            LinearLayout ll = (LinearLayout) findViewById(R.id.toggleButtons);
+            ll.removeAllViews();
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
                 DatePickerDialog picker = new DatePickerDialog(OrderActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Date date = cldr.getTime();
-                        eText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                        TextView tv = (TextView) findViewById(R.id.textViewShowings);
-                        tv.setText("Showings for " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    Date date = cldr.getTime();
+                    eText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    TextView tv = (TextView) findViewById(R.id.textViewShowings);
+                    tv.setText("Showings for " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
-
-                        try {
-                            airingTimes = getAirings(monthOfYear, dayOfMonth);
-                        } catch (DatabaseAccessException throwables) {
-                            throwables.printStackTrace();
-                        }
-
-                        initializeAiringsButtons(airingTimes);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        eText.setShowSoftInputOnFocus(false);
                     }
-                }, year, month, day);
-                picker.show();
-            }
+                    eText.setInputType(InputType.TYPE_NULL);
+                    eText.setFocusable(false);
+                    try {
+                        airingTimes = getAirings(monthOfYear, dayOfMonth);
+                    } catch (DatabaseAccessException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    initializeAiringsButtons(airingTimes);
+                }
+            }, year, month, day);
+            initializeAiringsButtons(airingTimes);
+            eText.setEnabled(true);
+            picker.show();
         });
+
     }
 
     /**
@@ -194,10 +214,16 @@ public class OrderActivity extends AppCompatActivity {
      * @param airingTimes
      */
     protected void initializeAiringsButtons(String[] airingTimes) {
+
+        LinearLayout ll = (LinearLayout) findViewById(R.id.toggleButtons);
+        if (airingButtons != null){
+           ll.removeAllViews();
+        }
+
         airingButtons = new ToggleButton[airingTimes.length];
 
         for (int i = 0; i < airingTimes.length; i++) {
-            airingButtons[i] = createCustomButton(airingTimes[i] + "\n$" + TicketLogic.calculateTicketPrice(selectedMovie), getResources().getDrawable(R.drawable.button_border_off));
+            airingButtons[i] = createCustomButton(airingTimes[i] + "\n$" + StandardTicketLogic.getTicketPrice(), getResources().getDrawable(R.drawable.button_border_off));
             airingButtons[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -208,7 +234,6 @@ public class OrderActivity extends AppCompatActivity {
                 }
             });
 
-            LinearLayout ll = (LinearLayout) findViewById(R.id.toggleButtons);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(250, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 0, 10, 0);
             airingButtons[i].setLayoutParams(params);
@@ -312,7 +337,10 @@ public class OrderActivity extends AppCompatActivity {
      * @throws DatabaseAccessException
      */
     protected String[] getAirings(int month, int day) throws DatabaseAccessException {
-        airings.addAll(dbm.getAirings(selectedMovie));
+
+        //airings.addAll(dbm.getAirings(selectedMovie));
+        stubAirings = new StubAirings(selectedMovie);
+        airings.addAll(stubAirings.getAirings());
         return new String[]{"12:30 PM", "2:30 PM", "4:30 PM"};
     }
 
