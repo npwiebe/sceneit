@@ -41,6 +41,15 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'org.json:json:20140107'
+
+    // HTTP Requests
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // JWTs
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
 
     //glide view dependencies
     implementation 'com.github.bumptech.glide:glide:4.4.0'

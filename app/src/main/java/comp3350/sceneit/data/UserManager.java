@@ -2,6 +2,7 @@ package comp3350.sceneit.data;
 
 import comp3350.sceneit.data.exceptions.InvalidUserCredentials;
 import comp3350.sceneit.data.exceptions.UserExistsException;
+import comp3350.sceneit.data.exceptions.UserManagerException;
 
 public interface UserManager {
     /**
@@ -14,7 +15,7 @@ public interface UserManager {
      * @return The logged in users info
      * @throws UserExistsException if the user already exists
      */
-    public User register(String username, String password, String name, String email) throws UserExistsException;
+    public User register(String username, String password, String name, String email) throws UserExistsException, UserManagerException;
 
     /**
      * Login as a user
@@ -24,5 +25,5 @@ public interface UserManager {
      * @return The logged in users info
      * @throws InvalidUserCredentials if the user could not be logged in due to invalid credentials
      */
-    public User login(String username, String password) throws InvalidUserCredentials;
+    public User login(String username, String password) throws InvalidUserCredentials, UserManagerException;
 }
