@@ -42,9 +42,9 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 Toast.makeText(getApplicationContext(), "Success login", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
+
             }
         }
-
     }
 
 
