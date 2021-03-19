@@ -182,6 +182,10 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
         dialog.show();
     }
 
+    public void onBackPressed(){
+        moveTaskToBack(true);
+    }
+
     //convert rating range from 0 - 100 to 0 - 5
     private String convertRating(int value)
     {

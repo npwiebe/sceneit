@@ -94,6 +94,7 @@ public class CreditActivity extends AppCompatActivity implements View.OnClickLis
             //This is here for when we link to the next activity. Like confirmation page
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+
         }
     }
 
