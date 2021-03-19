@@ -72,3 +72,11 @@ create unique index airings_airings_id_uindex
 alter table airings
     add constraint airings_pk
         primary key (airings_id);
+
+/* Users Table */
+create table users (
+    username varchar unique not null primary key,
+    hashed_password varchar not null,
+    name varchar not null,
+    email varchar not null
+)
