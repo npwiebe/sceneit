@@ -168,7 +168,6 @@ public class OrderActivity extends AppCompatActivity {
      * @param eText
      */
     protected void calenderHandler(EditText eText) {
-
         eText.setInputType(InputType.TYPE_NULL);
         eText.setOnClickListener((View.OnClickListener) v -> {
             eText.setEnabled(false);
@@ -202,9 +201,10 @@ public class OrderActivity extends AppCompatActivity {
             }, year, month, day);
             initializeAiringsButtons(airingTimes);
             eText.setEnabled(true);
+            picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            picker.getDatePicker().setMaxDate(System.currentTimeMillis() + 2592000000L);
             picker.show();
         });
-
     }
 
     /**
