@@ -27,6 +27,8 @@
         <activity android:name=".presentation.CreditActivity" />
         <activity android:name=".presentation.MainActivity">
         </activity>
+        <activity android:name=".presentation.SearchActivity">
+        </activity>
         <activity android:name=".presentation.OrderActivity" />
 
         <meta-data
