@@ -34,7 +34,7 @@ The retrospective assisted us in managing our time properly. In iteration 1, we 
 * [Iteration 1 merge requests](https://code.cs.umanitoba.ca/3350-winter-2021-a02/group-8/app/-/merge_requests?scope=all&utf8=%E2%9C%93&state=merged&milestone_title=Iteration%201)
 * [Iteration 2 merge requests](https://code.cs.umanitoba.ca/3350-winter-2021-a02/group-8/app/-/merge_requests?scope=all&utf8=%E2%9C%93&state=merged&milestone_title=Iteration%202)
 * [Iteration 1 submission date](https://code.cs.umanitoba.ca/3350-winter-2021-a02/group-8/app/-/tags/Iteration-1) 
-* [Iteration 2 submission date](put link to iteration 2 tag here)
+* [Iteration 2 submission date](https://code.cs.umanitoba.ca/3350-winter-2021-a02/group-8/app/-/tags/Iteration-2)
 
 ## Design patterns
 
