@@ -97,7 +97,10 @@ async def register_user(user: UserCreateIn, db: DatabaseManager = Depends()):
         name=user.name,
     )
 
-    db.create_user(db_user)
+    try:
+        db.create_user(db_user)
+    except Exception:
+        return HTTPException(status_code=422, detail="User already exists.")
 
     return Token(access_token=_create_user_jwt(user), token_type="bearer")
 
