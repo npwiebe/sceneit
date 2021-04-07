@@ -32,7 +32,8 @@ create table movies
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     tmdb_id int not null,
     rating int not null,
-    poster_url varchar not null
+    poster_url varchar not null,
+    genres varchar[] not null,
 );
 
 /* Register Trigger for updating timestamps */

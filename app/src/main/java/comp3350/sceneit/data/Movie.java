@@ -1,18 +1,22 @@
 package comp3350.sceneit.data;
 
+import java.util.List;
+
 public class Movie {
     int movieId;
     String title;
     String description;
     int rating;
     String poster_url;
+    List<String> tags;
 
-    public Movie(int movieId, String title, String description, int rating, String poster_url) {
+    public Movie(int movieId, String title, String description, int rating, String poster_url, List<String> tags) {
         this.movieId = movieId;
         this.title = title;
         this.description = description;
         this.rating = rating;
         this.poster_url = poster_url;
+        this.tags = tags;
     }
 
     /**
@@ -37,4 +41,6 @@ public class Movie {
     public String getDescription() {
         return description;
     }
+
+    public List<String> getTags() { return tags; }
 }

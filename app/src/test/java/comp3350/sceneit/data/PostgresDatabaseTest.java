@@ -93,7 +93,12 @@ public class PostgresDatabaseTest {
                     "The Avengers",
                     "When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!",
                     77,
-                    "https://image.tmdb.org/t/p/original/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg"
+                    "https://image.tmdb.org/t/p/original/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
+                    new ArrayList<String>() {{
+                        add("Science Fiction");
+                        add("Action");
+                        add("Adventure");
+                    }}
             );
 
             ArrayList<Airing> airings2 = dbm.getAirings(movie);

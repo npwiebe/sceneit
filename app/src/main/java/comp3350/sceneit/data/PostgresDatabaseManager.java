@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,7 +63,8 @@ public class PostgresDatabaseManager implements DatabaseManager {
                 rs.getString("title"),
                 rs.getString("description"),
                 rs.getInt("rating"),
-                rs.getString("poster_url"));
+                rs.getString("poster_url"),
+                Arrays.asList((String[]) rs.getArray("genres").getArray()));
     }
 
     private Theatre getTheatreFromResultSet(ResultSet rs) throws SQLException {
