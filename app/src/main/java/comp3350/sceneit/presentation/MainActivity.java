@@ -93,22 +93,15 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     }
 
     private void getNowPlayingDetails(){
-        mImageURL.add("https://static.wikia.nocookie.net/godzilla/images/4/43/Godzilla_vs_Kong_Poster.jpg/revision/latest?cb=20210121180804");
-        mImageURL.add("https://i5.walmartimages.com/asr/7ea01e0a-22b0-4bf8-8698-5c2e9bde87cb_1.5cfd5de0b85f9ab768f2a367474d4f8b.jpeg");
-        mImageURL.add("https://www.joblo.com/assets/images/oldsite/posters/images/full/02_AVG_Online1Sht_UK2_rgb_thumb.jpg");
-        mImageURL.add("https://m.media-amazon.com/images/I/91F6aF4UJ0L._AC_SL1500_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/41QsBqbdIqL._AC_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/91Tr%2BbhnMUL._AC_SL1500_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/714hR8KCqaL._AC_SL1308_.jpg");
-
         DatabaseManager dbm = new PostgresDatabaseManager();
         ArrayList<Movie> movies;
-
         try
         {
             movies = dbm.getMovies();
             for(Movie mv : movies)
             {
+                mImageURL.add(mv.getPoster_url());
+                Log.d(TAG, "MOVIE URL: " + mv.getPoster_url().replace("@drawable/", "") + "    " + mv.getTitle());
                 mTitle.add(mv.getTitle());
                 mRating.add(convertRating(mv.getRating()));
             }
