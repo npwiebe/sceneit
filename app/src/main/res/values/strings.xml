@@ -41,4 +41,7 @@
     <string name="postal_code">Postal Code/ZIP</string>
     <string name="telephone">Telephone Number</string>
     <string name="confirmPurchase">Confirm Purchase</string>
+
+
+
 </resources>

@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+import java.util.Collections;
 import java.util.Random;
 
 import comp3350.sceneit.R;
@@ -23,6 +30,7 @@ import comp3350.sceneit.data.exceptions.DatabaseAccessException;
 import comp3350.sceneit.data.DatabaseManager;
 import comp3350.sceneit.data.Movie;
 import comp3350.sceneit.data.PostgresDatabaseManager;
+import comp3350.sceneit.logic.MovieFiltering;
 
 public class MainActivity extends AppCompatActivity implements IMovieClickListener {
 
@@ -32,11 +40,14 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     private ArrayList<String> mImageURL = new ArrayList<>();
     private ArrayList<String> mTitle = new ArrayList<>();
     private ArrayList<String> mRating = new ArrayList<>();
-
+        private ArrayList<Integer> mvID = new ArrayList<>();
     //Trending
     private ArrayList<String> tImageURL = new ArrayList<>();
     private ArrayList<String> tTitle = new ArrayList<>();
     private ArrayList<String> tRating = new ArrayList<>();
+
+    private Set<String> mgeneres  =  new HashSet<String>();
+    private ArrayList<Movie> movies = new ArrayList<>();
 
     //Theatres
     private String[] theatre = {"SilverCity St. Vital Cinemas", "Landmark Cinemas Towne Cinema 8", "Scotiabank Theatre",
@@ -46,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     private RecyclerView recyclerView;
     private TextView tvTheatreLocation;
     private DatabaseManager dbm;
-
+    private MovieFiltering mvFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,27 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
 
         getNowPlayingDetails();
         getTrending();
+
+        mvFilter = new MovieFiltering();
+        mvFilter.setMovies(movies);
+
+        //Create spinner
+        Spinner mySpinner = (Spinner) findViewById(R.id.spinner1);
+        String[] array = mgeneres.toArray(new String[0]);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mySpinner.setAdapter(adapter);
+
+        mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                displayFiltering(parent.getSelectedItem().toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
         //OnClickListener for ivPin
         ImageView imgPin = (ImageView) findViewById(R.id.ivPin);
@@ -96,15 +128,23 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
 
     }
 
+    public void displayFiltering(String filter) {
+        mvFilter.setSelectedGen(filter);
+        mvFilter.doFiltering();
+        display(R.id.rvNowPlaying, 0);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mvFilter.getFilteredURL(), mvFilter.getFilteredTittle(), mvFilter.getFilteredRating(), mvFilter.getFilteredId(), R.layout.now_playing_carousel_item, this);
+        recyclerView.setAdapter(adapter);
+    }
     private void getNowPlayingDetails(){
-        ArrayList<Movie> movies;
         try
         {
             movies = dbm.getMovies();
             for(Movie mv : movies)
             {
                 mImageURL.add(mv.getPoster_url());
+                mgeneres.addAll(mv.getTags());
                 mTitle.add(mv.getTitle());
+                mvID.add(mv.getMovieId());
                 mRating.add(convertRating(mv.getRating()));
             }
         } catch (DatabaseAccessException e)
@@ -113,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
         }
 
         display(R.id.rvNowPlaying, 50);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageURL, mTitle, mRating, R.layout.now_playing_carousel_item, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageURL, mTitle, mRating, mvID, R.layout.now_playing_carousel_item, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -139,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
         Collections.shuffle(tRating, new Random(seed));
 
         display(R.id.rvTrending, 50);
-        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this, tImageURL, tTitle, tRating, R.layout.trending_carousel_item, this);
+        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this, tImageURL, tTitle, tRating, mvID, R.layout.trending_carousel_item, this);
         recyclerView.setAdapter(adapter1);
     }
 
