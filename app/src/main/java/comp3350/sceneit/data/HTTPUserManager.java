@@ -24,10 +24,12 @@ public class HTTPUserManager implements UserManager{
     private static final String TOKEN_URL = "http://api.sceneit.linney.xyz/auth/token";
     private static final String USER_DATA = "http://api.sceneit.linney.xyz/auth/users/me";
 
-    private String makeRequestInThread(Request request) throws UserManagerNetworkingException, UserManagerAuthException {
+    private String makeRequestInThread(Request request) throws UserManagerNetworkingException, UserManagerAuthException, UserExistsException {
         AtomicReference<String> response_str = new AtomicReference<>();
         AtomicBoolean genericError = new AtomicBoolean(false);
         AtomicBoolean authError = new AtomicBoolean(false);
+        AtomicBoolean invalidCredentials = new AtomicBoolean(false);
+
 
         Thread thread = new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -35,6 +37,9 @@ public class HTTPUserManager implements UserManager{
             try (Response response = client.newCall(request).execute()) {
                 if (response.code() == 401) {
                     authError.set(true);
+                    return;
+                } else if (response.code() == 422) {
+                    invalidCredentials.set(true);
                     return;
                 }
                 if (response.body() != null) {
@@ -63,6 +68,10 @@ public class HTTPUserManager implements UserManager{
             throw new UserManagerNetworkingException();
         }
 
+        if (invalidCredentials.get()) {
+            throw new UserExistsException();
+        }
+
         return response_str.get();
     }
 
@@ -72,7 +81,13 @@ public class HTTPUserManager implements UserManager{
                 .addHeader("Authorization", "Bearer "+ jwt)
                 .build();
 
-        String response = this.makeRequestInThread(request_user_data);
+        String response;
+        try {
+             response = this.makeRequestInThread(request_user_data);
+        } catch (UserExistsException e) {
+            throw new UserManagerException();
+        }
+
         User user;
         try {
             JSONObject response_data = new JSONObject(response);
@@ -131,7 +146,15 @@ public class HTTPUserManager implements UserManager{
                 .post(body)
                 .build();
 
-        String response = this.makeRequestInThread(request);
+        String response;
+        try {
+            response = this.makeRequestInThread(request);
+        } catch (UserExistsException e) {
+            throw new UserManagerException();
+        } catch (UserManagerAuthException e) {
+            throw new InvalidUserCredentials();
+        }
+
         try {
             JSONObject response_data = new JSONObject(response);
             jwt_str = response_data.getString("access_token");
