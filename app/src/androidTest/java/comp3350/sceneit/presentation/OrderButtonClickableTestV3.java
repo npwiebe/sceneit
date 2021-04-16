@@ -45,106 +45,47 @@ public class OrderButtonClickableTestV3 {
     @Test
     public void orderButtonClickableTestV3() {
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.signInUserNames),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserNames)));
         appCompatEditText.perform(replaceText("111"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.signInUserPassword),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserPassword)));
         appCompatEditText2.perform(replaceText("111111"), closeSoftKeyboard());
 
         ViewInteraction materialButton = onView(
-                allOf(withId(R.id.logInBtn), withText("log in"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                4),
-                        isDisplayed()));
+                allOf(withId(R.id.logInBtn)));
         materialButton.perform(click());
 
         ViewInteraction recyclerView = onView(
-                allOf(withId(R.id.rvNowPlaying),
-                        childAtPosition(
-                                withId(R.id.linearLayout2),
-                                0)));
+                allOf(withId(R.id.rvNowPlaying)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.editTextCalender),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextCalender)));
         appCompatEditText3.perform(click());
 
         ViewInteraction materialButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        materialButton2.perform(scrollTo(), click());
+                allOf(withId(android.R.id.button1)));
+        materialButton2.perform(click());
 
         ViewInteraction toggleButton = onView(
-                allOf(withText("12:30 PM\n$10"),
-                        childAtPosition(
-                                allOf(withId(R.id.toggleButtons),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                10)),
-                                0),
-                        isDisplayed()));
+                allOf(withText("12:30 PM\n$10")));
         toggleButton.perform(click());
 
         ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.editTextNumberofTickets), withText("0"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                13),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextNumberofTickets)));
         appCompatEditText4.perform(replaceText("10"));
 
         ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.editTextNumberofTickets), withText("10"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                13),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextNumberofTickets)));
         appCompatEditText5.perform(closeSoftKeyboard());
 
         ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.editTextNumberofTickets), withText("10"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                13),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextNumberofTickets)));
         appCompatEditText6.perform(pressImeActionButton());
 
         ViewInteraction button = onView(
-                allOf(withId(R.id.buttonOrderTickets), withText("ORDER TICKETS? "),
-                        withParent(withParent(withId(android.R.id.content))),
-                        isDisplayed()));
+                allOf(withId(R.id.buttonOrderTickets)));
         button.check(matches(isDisplayed()));
     }
 

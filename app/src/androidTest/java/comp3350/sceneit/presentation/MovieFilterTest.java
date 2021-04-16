@@ -45,43 +45,19 @@ public class MovieFilterTest {
     @Test
     public void movieFilterTest() {
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.signInUserNames),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserNames)));
         appCompatEditText.perform(click());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.signInUserNames),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserNames)));
         appCompatEditText2.perform(replaceText("test1234"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.signInUserPassword),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserPassword)));
         appCompatEditText3.perform(replaceText("tmdghks2"), closeSoftKeyboard());
 
         ViewInteraction materialButton = onView(
-                allOf(withId(R.id.logInBtn), withText("log in"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                4),
-                        isDisplayed()));
+                allOf(withId(R.id.logInBtn)));
         materialButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -94,13 +70,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -129,13 +99,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner2 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -164,13 +128,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner3 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner3.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -199,13 +157,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner4 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner4.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -234,13 +186,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner5 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner5.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -269,13 +215,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner6 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner6.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -304,13 +244,7 @@ public class MovieFilterTest {
         }
 
         ViewInteraction appCompatSpinner7 = onView(
-                allOf(withId(R.id.spinner1),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                9),
-                        isDisplayed()));
+                allOf(withId(R.id.spinner1)));
         appCompatSpinner7.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -330,10 +264,7 @@ public class MovieFilterTest {
         appCompatCheckedTextView7.perform(click());
 
         ViewInteraction recyclerView = onView(
-                allOf(withId(R.id.rvNowPlaying),
-                        childAtPosition(
-                                withId(R.id.linearLayout2),
-                                0)));
+                allOf(withId(R.id.rvNowPlaying)));
         recyclerView.perform(actionOnItemAtPosition(1, click()));
 
         pressBack();
