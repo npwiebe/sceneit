@@ -63,4 +63,10 @@ dependencies {
         exclude module: 'recyclerview-v7'
         exclude module: 'appcompat-v7'
     }
+
+    // set up espresso
+    androidTestCompile 'com.android.support.test:runner:0.3'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
+    // include espresso-intents
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2'
 }
