@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
@@ -40,82 +41,41 @@ import static org.hamcrest.Matchers.is;
 public class DateSelectTestV3 {
 
     @Rule
+    //public ActivityScenarioRule<LoginActivity> mActivityTestRule = new ActivityScenarioRule<LoginActivity>(LoginActivity.class);
     public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void dateSelectTestV3() {
         ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.signInUserNames),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserNames)));
         appCompatEditText.perform(replaceText("111"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.signInUserPassword),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.signInUserPassword)));
         appCompatEditText2.perform(replaceText("111111"), closeSoftKeyboard());
 
         ViewInteraction materialButton = onView(
-                allOf(withId(R.id.logInBtn), withText("log in"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                4),
-                        isDisplayed()));
+                allOf(withId(R.id.logInBtn)));
         materialButton.perform(click());
 
         ViewInteraction recyclerView = onView(
-                allOf(withId(R.id.rvNowPlaying),
-                        childAtPosition(
-                                withId(R.id.linearLayout2),
-                                0)));
+                allOf(withId(R.id.rvNowPlaying)));
         recyclerView.perform(actionOnItemAtPosition(0, click()));
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.editTextCalender),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.editTextCalender)));
         appCompatEditText3.perform(click());
 
         ViewInteraction materialButton2 = onView(
-                allOf(withId(android.R.id.button1), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                3)));
-        materialButton2.perform(scrollTo(), click());
+                allOf(withId(android.R.id.button1)));
+        materialButton2.perform(click());
 
         ViewInteraction toggleButton = onView(
-                allOf(withText("12:30 PM\n$10"),
-                        childAtPosition(
-                                allOf(withId(R.id.toggleButtons),
-                                        childAtPosition(
-                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                10)),
-                                0),
-                        isDisplayed()));
+                allOf(withText("12:30 PM\n$10")));
         toggleButton.perform(click());
 
         ViewInteraction toggleButton2 = onView(
-                allOf(withText("12:30 PM\n$10"),
-                        withParent(allOf(withId(R.id.toggleButtons),
-                                withParent(IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class)))),
-                        isDisplayed()));
+                allOf(withText("12:30 PM\n$10")));
         toggleButton2.check(matches(isDisplayed()));
     }
 
