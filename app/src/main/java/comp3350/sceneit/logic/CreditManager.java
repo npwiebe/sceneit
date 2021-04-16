@@ -74,7 +74,13 @@ public class CreditManager {
             inputMonth = dateNum / 100; //removes the year digits
             inputYear = dateNum % 100; //Removes everything that isnt the last two digits
             //the date is correct if the input month and year are less or equal to current month and year.
-            validated = (inputMonth >= c.get(Calendar.MONTH) && inputYear >= c.get(Calendar.YEAR) % 100);
+            if(inputYear == c.get(Calendar.YEAR) % 100) {
+                if(inputMonth >= c.get(Calendar.MONTH)) {
+                    validated = true;
+                }
+            } else if(inputYear > c.get(Calendar.YEAR) % 100){
+                validated = true;
+            }
         }
         return validated;
     }
