@@ -74,11 +74,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(mContext).asDrawable().load(mImageURL.get(position)).into(holder.moviePoster);
+        //choose resource (locally stored image or URL) and populate imageView
+        if(mImageURL.get(position).contains("@drawable/")){
+            //get only the image name
+            String posterName = mImageURL.get(position).replace("@drawable/", "");
+
+            Glide.with(mContext).load(getImage(posterName)).into(holder.moviePoster);
+        }
+        else {
+            Glide.with(mContext).asDrawable().load(mImageURL.get(position)).into(holder.moviePoster);
+        }
 
         holder.movieTitle.setText(mTitle.get(position));
 
         holder.movieRating.setRating(Float.parseFloat(mRating.get(position)));
+    }
+
+    //method to get the locally stored movie poster using it's name
+    private int getImage(String posterName) {
+        int drawableResourceId = mContext.getResources().getIdentifier(posterName, "drawable", mContext.getPackageName());
+        return drawableResourceId;
     }
 
     @Override

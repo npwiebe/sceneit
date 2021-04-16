@@ -31,6 +31,8 @@ Group 8 is developing a movie ticket purchasing application. The aim of the app 
 * [Branching Strategy](./git.md)
 * [Iteration 1 Worksheet](./worksheet-iter1.md)
 * [Iteration 2 Worksheet](./worksheet-iter2.md)
+* [Iteration 3 Worksheet](./worksheet-iter3.md)
+* [Retrospective](./RETROSPECTIVE.md)
 
 ## Architecture
 ![](./architecture.jpg)

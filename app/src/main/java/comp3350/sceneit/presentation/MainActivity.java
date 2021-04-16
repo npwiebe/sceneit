@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import comp3350.sceneit.R;
 import comp3350.sceneit.data.exceptions.DatabaseAccessException;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
 
     private RecyclerView recyclerView;
     private TextView tvTheatreLocation;
+    private DatabaseManager dbm;
 
 
     @Override
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
 
         tvTheatreLocation = (TextView) findViewById(R.id.tvTheaterName);
         tvTheatreLocation.setText(theatre[0]);
+        dbm = new PostgresDatabaseManager();
 
         getNowPlayingDetails();
         getTrending();
@@ -93,22 +97,13 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     }
 
     private void getNowPlayingDetails(){
-        mImageURL.add("https://static.wikia.nocookie.net/godzilla/images/4/43/Godzilla_vs_Kong_Poster.jpg/revision/latest?cb=20210121180804");
-        mImageURL.add("https://i5.walmartimages.com/asr/7ea01e0a-22b0-4bf8-8698-5c2e9bde87cb_1.5cfd5de0b85f9ab768f2a367474d4f8b.jpeg");
-        mImageURL.add("https://www.joblo.com/assets/images/oldsite/posters/images/full/02_AVG_Online1Sht_UK2_rgb_thumb.jpg");
-        mImageURL.add("https://m.media-amazon.com/images/I/91F6aF4UJ0L._AC_SL1500_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/41QsBqbdIqL._AC_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/91Tr%2BbhnMUL._AC_SL1500_.jpg");
-        mImageURL.add("https://images-na.ssl-images-amazon.com/images/I/714hR8KCqaL._AC_SL1308_.jpg");
-
-        DatabaseManager dbm = new PostgresDatabaseManager();
         ArrayList<Movie> movies;
-
         try
         {
             movies = dbm.getMovies();
             for(Movie mv : movies)
             {
+                mImageURL.add(mv.getPoster_url());
                 mTitle.add(mv.getTitle());
                 mRating.add(convertRating(mv.getRating()));
             }
@@ -123,34 +118,25 @@ public class MainActivity extends AppCompatActivity implements IMovieClickListen
     }
 
     private void getTrending() {
+        ArrayList<Movie> movies;
+        try
+        {
+            movies = dbm.getMovies();
+            for(Movie mv : movies)
+            {
+                tImageURL.add(mv.getPoster_url());
+                tTitle.add(mv.getTitle());
+                tRating.add(convertRating(mv.getRating()));
+            }
+        } catch (DatabaseAccessException e)
+        {
+            e.printStackTrace();
+        }
 
-        tImageURL.add("https://www.joblo.com/assets/images/oldsite/posters/images/full/02_AVG_Online1Sht_UK2_rgb_thumb.jpg");
-        tTitle.add("The Avengers");
-        tRating.add("4");
-
-        tImageURL.add("https://images-na.ssl-images-amazon.com/images/I/41QsBqbdIqL._AC_.jpg");
-        tTitle.add("Don't Breathe");
-        tRating.add("3.5");
-
-        tImageURL.add("https://static.wikia.nocookie.net/godzilla/images/4/43/Godzilla_vs_Kong_Poster.jpg/revision/latest?cb=20210121180804");
-        tTitle.add("Godzilla vs. Kong");
-        tRating.add("0");
-
-        tImageURL.add("https://m.media-amazon.com/images/I/91F6aF4UJ0L._AC_SL1500_.jpg");
-        tTitle.add("Joker");
-        tRating.add("4.2");
-
-        tImageURL.add("https://i5.walmartimages.com/asr/7ea01e0a-22b0-4bf8-8698-5c2e9bde87cb_1.5cfd5de0b85f9ab768f2a367474d4f8b.jpeg");
-        tTitle.add("The Purge: Election Year");
-        tRating.add("3.2");
-
-        tImageURL.add("https://images-na.ssl-images-amazon.com/images/I/91Tr%2BbhnMUL._AC_SL1500_.jpg");
-        tTitle.add("Spider-Man");
-        tRating.add("3.8");
-
-        tImageURL.add("https://images-na.ssl-images-amazon.com/images/I/714hR8KCqaL._AC_SL1308_.jpg");
-        tTitle.add("Toy Story");
-        tRating.add("4");
+        long seed = System.nanoTime();
+        Collections.shuffle(tImageURL, new Random(seed));
+        Collections.shuffle(tTitle, new Random(seed));
+        Collections.shuffle(tRating, new Random(seed));
 
         display(R.id.rvTrending, 50);
         RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(this, tImageURL, tTitle, tRating, R.layout.trending_carousel_item, this);
